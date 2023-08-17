@@ -6,7 +6,7 @@ export function SubscribeMessage(name: string): MethodDecorator {
     const targetMethod = target[propertyKey as keyof typeof target]
 
     ActionStorage.addActionMetadata({
-      target,
+      target: target.constructor,
       value: targetMethod,
       type: SocketEvent.MESSAGE,
       options: { name }
