@@ -1,11 +1,11 @@
 import { SocketEvent } from '../../enums'
-import { TypeMetadataStorage } from '../../storages'
+import { ActionStorage } from '../../storages'
 
 export function SubscribeMessage(name: string): MethodDecorator {
   return (target: Object, propertyKey: string | symbol): void => {
     const targetMethod = target[propertyKey as keyof typeof target]
 
-    TypeMetadataStorage.addActionMetadata({
+    ActionStorage.addActionMetadata({
       target,
       value: targetMethod,
       type: SocketEvent.MESSAGE,

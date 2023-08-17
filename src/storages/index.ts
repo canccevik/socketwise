@@ -1,1 +1,2 @@
-export * from './type-metadata.storage'
+export * from './portal.storage'
+export * from './action.storage'
