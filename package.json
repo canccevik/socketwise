@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "reflect-metadata": "^0.1.13"
-  }
+  },
   "devDependencies": {
     "@types/jest": "^29.5.3",
     "@types/node": "^20.4.9",
