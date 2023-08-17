@@ -1,0 +1,16 @@
+{
+  "git": {
+    "commitMessage": "chore: release v${version}"
+  },
+  "hooks": {
+    "before:init": ["git pull", "pnpm run lint", "pnpm run test", "pnpm run build"],
+    "after:bump": "pnpm run version"
+  },
+  "github": {
+    "release": true,
+    "releaseName": "v${version}"
+  },
+  "npm": {
+    "publish": true
+  }
+}
