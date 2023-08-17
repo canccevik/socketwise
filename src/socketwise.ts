@@ -32,10 +32,18 @@ export class Socketwise {
 
   private async registerPortal(portal: Type, socket: Socket): Promise<void> {
     const connectedAction = ActionStorage.getSingleActionMetadata(portal, SocketEvent.CONNECT)
+    const disconnectedAction = ActionStorage.getSingleActionMetadata(portal, SocketEvent.DISCONNECT)
     const messageActions = ActionStorage.getActionsMetadata(portal, SocketEvent.MESSAGE)
 
     if (connectedAction) {
       await this.executeAction(connectedAction, socket)
+    }
+
+    if (disconnectedAction) {
+      socket.on(
+        SocketEvent.DISCONNECT,
+        async () => await this.executeAction(disconnectedAction, socket)
+      )
     }
 
     if (messageActions) {
