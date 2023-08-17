@@ -58,6 +58,7 @@ export class Socketwise {
     const paramsMetadata = ParamStorage.getParamsMetadata(action.target as Type, action.value)
     const paramResponseMap: Record<ParamType, unknown> = {
       [ParamType.MESSAGE]: message,
+      [ParamType.SOCKET_IO]: this.io,
       [ParamType.CONNECTED_SOCKET]: socket,
       [ParamType.SOCKET_ID]: socket.id
     }
