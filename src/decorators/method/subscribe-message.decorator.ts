@@ -1,15 +1,6 @@
 import { SocketEvent } from '../../enums'
-import { ActionStorage } from '../../storages'
+import { createParamDecorator } from './create-param-decorator'
 
 export function SubscribeMessage(name: string): MethodDecorator {
-  return (target: Object, propertyKey: string | symbol): void => {
-    const targetMethod = target[propertyKey as keyof typeof target]
-
-    ActionStorage.addActionMetadata({
-      target: target.constructor,
-      value: targetMethod,
-      type: SocketEvent.MESSAGE,
-      options: { name }
-    })
-  }
+  return createParamDecorator(SocketEvent.MESSAGE, { name })
 }

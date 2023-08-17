@@ -1,14 +1,6 @@
 import { SocketEvent } from '../../enums'
-import { ActionStorage } from '../../storages'
+import { createParamDecorator } from './create-param-decorator'
 
 export function OnConnect(): MethodDecorator {
-  return (target: Object, propertyKey: string | symbol): void => {
-    const targetMethod = target[propertyKey as keyof typeof target]
-
-    ActionStorage.addActionMetadata({
-      target: target.constructor,
-      value: targetMethod,
-      type: SocketEvent.CONNECT
-    })
-  }
+  return createParamDecorator(SocketEvent.CONNECT)
 }
