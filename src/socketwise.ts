@@ -63,7 +63,8 @@ export class Socketwise {
       messageActions.forEach((action) => {
         socket.on(
           action.options.name,
-          async (message: unknown) => await this.executeAction(action, socket, message)
+          async (message: unknown, ack: Function) =>
+            await this.executeAction(action, socket, message, ack)
         )
       })
     }
@@ -72,21 +73,28 @@ export class Socketwise {
   private async executeAction(
     action: ActionMetadata,
     socket: Socket,
-    message?: unknown
+    message?: unknown,
+    ack?: Function
   ): Promise<void> {
     const portalInstance = Container.resolve(action.target as Type)
-    const actionParams = this.getActionParams(action, message, socket)
+    const actionParams = this.getActionParams(action, socket, message, ack)
     await action.value.bind(portalInstance)(...actionParams)
   }
 
-  private getActionParams(action: ActionMetadata, message: unknown, socket: Socket): any {
+  private getActionParams(
+    action: ActionMetadata,
+    socket: Socket,
+    message?: unknown,
+    ack?: Function
+  ): any {
     const paramResponseMap: Record<ParamType, unknown> = {
       [ParamType.MESSAGE]: message,
       [ParamType.SOCKET_IO]: this.io,
       [ParamType.CONNECTED_SOCKET]: socket,
       [ParamType.SOCKET_ID]: socket.id,
       [ParamType.SOCKET_REQUEST]: socket.request,
-      [ParamType.SOCKET_ROOMS]: socket.rooms
+      [ParamType.SOCKET_ROOMS]: socket.rooms,
+      [ParamType.MESSAGE_ACK]: ack
     }
     return ParamStorage.getParamsMetadata(action.target as Type, action.value)?.map(
       (param) => paramResponseMap[param.paramType]

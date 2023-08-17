@@ -4,7 +4,8 @@ export enum ParamType {
   CONNECTED_SOCKET,
   SOCKET_ID,
   SOCKET_REQUEST,
-  SOCKET_ROOMS
+  SOCKET_ROOMS,
+  MESSAGE_ACK
 }
 
 export interface ParamMetadata {
