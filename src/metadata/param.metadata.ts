@@ -1,6 +1,7 @@
 export enum ParamType {
   MESSAGE,
-  CONNECTED_SOCKET
+  CONNECTED_SOCKET,
+  SOCKET_ID
 }
 
 export interface ParamMetadata {
