@@ -1,10 +1,10 @@
 import { Type } from './interfaces'
 
-export interface SocketOptions {
+export interface SocketpressOptions {
   port: number
   portals: Type[]
 }
 
 export class Socketpress {
-  constructor(private readonly socketOptions: SocketOptions) {}
+  constructor(private readonly options: SocketpressOptions) {}
 }
