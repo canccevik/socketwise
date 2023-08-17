@@ -1,5 +1,5 @@
 {
-  "name": "socketpress",
+  "name": "socketwise",
   "version": "1.0.0",
   "description": "",
   "author": "Can Çevik <mazlumcancevik@gmail.com>",
@@ -39,12 +39,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/canccevik/socketpress.git"
+    "url": "git+https://github.com/canccevik/socketwise.git"
   },
   "bugs": {
-    "url": "https://github.com/canccevik/socketpress/issues"
+    "url": "https://github.com/canccevik/socketwise/issues"
   },
-  "homepage": "https://github.com/canccevik/socketpress#readme",
+  "homepage": "https://github.com/canccevik/socketwise#readme",
   "publishConfig": {
     "access": "public"
   }

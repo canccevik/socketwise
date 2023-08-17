@@ -4,17 +4,17 @@ import { ActionStorage } from './storages'
 import { SocketEvent } from './enums'
 import { Container } from 'magnodi'
 
-export interface SocketpressOptions {
+export interface SocketwiseOptions {
   io?: Server
   port?: number
   portals: Type[]
 }
 
-export class Socketpress {
+export class Socketwise {
   public io: Server
   private portals: Type[]
 
-  constructor(private readonly options: SocketpressOptions) {
+  constructor(private readonly options: SocketwiseOptions) {
     this.io = options.io || new Server(options.port)
     this.portals = this.options.portals
 

@@ -1,4 +1,4 @@
 import 'reflect-metadata'
 
-export * from './socketpress'
+export * from './socketwise'
 export * from './decorators'

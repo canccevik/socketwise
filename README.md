@@ -1,1 +1,1 @@
-### socketpress
+### socketwise
