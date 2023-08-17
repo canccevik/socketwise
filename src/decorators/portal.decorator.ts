@@ -1,9 +1,14 @@
 import { PortalStorage } from '../storages'
 
-export function Portal(): ClassDecorator {
+export interface PortalOptions {
+  namespace: string
+}
+
+export function Portal(options: PortalOptions): ClassDecorator {
   return (target: object): void => {
     PortalStorage.addPortalMetadata({
-      target
+      target,
+      options
     })
   }
 }
