@@ -55,14 +55,16 @@ export class Socketwise {
   }
 
   private getActionParams(action: ActionMetadata, message: unknown, socket: Socket): any {
-    const paramsMetadata = ParamStorage.getParamsMetadata(action.target as Type, action.value)
     const paramResponseMap: Record<ParamType, unknown> = {
       [ParamType.MESSAGE]: message,
       [ParamType.SOCKET_IO]: this.io,
       [ParamType.CONNECTED_SOCKET]: socket,
       [ParamType.SOCKET_ID]: socket.id,
-      [ParamType.SOCKET_REQUEST]: socket.request
+      [ParamType.SOCKET_REQUEST]: socket.request,
+      [ParamType.SOCKET_ROOMS]: socket.rooms
     }
-    return paramsMetadata?.map((param) => paramResponseMap[param.paramType])
+    return ParamStorage.getParamsMetadata(action.target as Type, action.value)?.map(
+      (param) => paramResponseMap[param.paramType]
+    )
   }
 }
