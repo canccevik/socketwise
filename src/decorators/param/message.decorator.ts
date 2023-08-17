@@ -6,7 +6,7 @@ export function Message(): Function {
     const targetMethod = target[propertyKey as keyof typeof target]
 
     ParamStorage.addParamMetadata({
-      target,
+      target: target.constructor,
       value: targetMethod,
       index: parameterIndex,
       paramType: ParamType.MESSAGE
