@@ -17,16 +17,7 @@
   "rules": {
     "prettier/prettier": ["error", { "endOfLine": "auto" }],
     "@typescript-eslint/explicit-member-accessibility": "off",
-    "@typescript-eslint/explicit-function-return-type": "off",
-    "import/order": [
-      "error",
-      {
-        "groups": ["external", ["internal", "builtin"], ["sibling", "parent"], "index"],
-        "pathGroups": [{ "pattern": "@*/**", "group": "internal", "position": "before" }],
-        "pathGroupsExcludedImportTypes": ["internal"],
-        "newlines-between": "always"
-      }
-    ]
+    "@typescript-eslint/explicit-function-return-type": "off"
   },
   "overrides": [
     {
