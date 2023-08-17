@@ -2,7 +2,8 @@ export enum ParamType {
   MESSAGE,
   SOCKET_IO,
   CONNECTED_SOCKET,
-  SOCKET_ID
+  SOCKET_ID,
+  SOCKET_REQUEST
 }
 
 export interface ParamMetadata {

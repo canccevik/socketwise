@@ -60,7 +60,8 @@ export class Socketwise {
       [ParamType.MESSAGE]: message,
       [ParamType.SOCKET_IO]: this.io,
       [ParamType.CONNECTED_SOCKET]: socket,
-      [ParamType.SOCKET_ID]: socket.id
+      [ParamType.SOCKET_ID]: socket.id,
+      [ParamType.SOCKET_REQUEST]: socket.request
     }
     return paramsMetadata?.map((param) => paramResponseMap[param.paramType])
   }
