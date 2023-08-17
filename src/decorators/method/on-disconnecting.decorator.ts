@@ -1,6 +1,6 @@
 import { SocketEvent } from '../../enums'
-import { createParamDecorator } from './create-param-decorator'
+import { createMethodDecorator } from './create-method-decorator'
 
 export function OnDisconnecting(): MethodDecorator {
-  return createParamDecorator(SocketEvent.DISCONNECTING)
+  return createMethodDecorator(SocketEvent.DISCONNECTING)
 }

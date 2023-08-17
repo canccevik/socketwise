@@ -37,26 +37,32 @@ export class Socketwise {
       messageActions.forEach((action) => {
         socket.on(
           action.options.name,
-          async (message: unknown) => await this.executeAction(action, message)
+          async (message: unknown) => await this.executeAction(action, message, socket)
         )
       })
     }
   }
 
-  private async executeAction(action: ActionMetadata, message: unknown): Promise<void> {
+  private async executeAction(
+    action: ActionMetadata,
+    message: unknown,
+    socket: Socket
+  ): Promise<void> {
     const portalInstance = Container.resolve(action.target as Type)
-    const actionParams = this.getActionParams(action, message)
+    const actionParams = this.getActionParams(action, message, socket)
 
     await action.value.bind(portalInstance)(...actionParams)
   }
 
-  private getActionParams(action: ActionMetadata, message: unknown): any {
+  private getActionParams(action: ActionMetadata, message: unknown, socket: Socket): any {
     const paramsMetadata = ParamStorage.getParamsMetadata(action.target as Type, action.value)
 
     return paramsMetadata?.map((param) => {
       switch (param.paramType) {
         case ParamType.MESSAGE:
           return message
+        case ParamType.CONNECTED_SOCKET:
+          return socket
       }
     })
   }

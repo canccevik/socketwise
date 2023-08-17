@@ -1,6 +1,6 @@
 import { SocketEvent } from '../../enums'
-import { createParamDecorator } from './create-param-decorator'
+import { createMethodDecorator } from './create-method-decorator'
 
 export function SubscribeMessage(name: string): MethodDecorator {
-  return createParamDecorator(SocketEvent.MESSAGE, { name })
+  return createMethodDecorator(SocketEvent.MESSAGE, { name })
 }

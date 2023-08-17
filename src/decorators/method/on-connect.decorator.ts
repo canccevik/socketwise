@@ -1,6 +1,6 @@
 import { SocketEvent } from '../../enums'
-import { createParamDecorator } from './create-param-decorator'
+import { createMethodDecorator } from './create-method-decorator'
 
 export function OnConnect(): MethodDecorator {
-  return createParamDecorator(SocketEvent.CONNECT)
+  return createMethodDecorator(SocketEvent.CONNECT)
 }
