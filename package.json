@@ -18,7 +18,9 @@
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
   },
   "dependencies": {
-    "reflect-metadata": "^0.1.13"
+    "magnodi": "^1.1.4",
+    "reflect-metadata": "^0.1.13",
+    "socket.io": "^4.7.2"
   },
   "devDependencies": {
     "@types/jest": "^29.5.3",
