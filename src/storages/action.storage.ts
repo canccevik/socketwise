@@ -1,3 +1,4 @@
+import { SocketEvent } from '../enums'
 import { Type } from '../interfaces'
 import { ActionMetadata } from '../metadata'
 
@@ -8,8 +9,12 @@ class ActionStorageHost {
     this.actions.push(metadata)
   }
 
-  public getActionsMetadataByTarget(target: Type): ActionMetadata[] | undefined {
-    return this.actions.filter((action) => action.target === target)
+  public getSingleActionMetadata(target: Type, type: SocketEvent): ActionMetadata | undefined {
+    return this.actions.find((action) => action.target === target && action.type === type)
+  }
+
+  public getActionsMetadata(target: Type, type: SocketEvent): ActionMetadata[] | undefined {
+    return this.actions.filter((action) => action.target === target && action.type === type)
   }
 }
 
