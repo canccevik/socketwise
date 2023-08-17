@@ -30,14 +30,19 @@ export class Socketwise {
     })
   }
 
-  private registerPortal(portal: Type, socket: Socket): void {
+  private async registerPortal(portal: Type, socket: Socket): Promise<void> {
+    const connectedAction = ActionStorage.getSingleActionMetadata(portal, SocketEvent.CONNECT)
     const messageActions = ActionStorage.getActionsMetadata(portal, SocketEvent.MESSAGE)
+
+    if (connectedAction) {
+      await this.executeAction(connectedAction, socket)
+    }
 
     if (messageActions) {
       messageActions.forEach((action) => {
         socket.on(
           action.options.name,
-          async (message: unknown) => await this.executeAction(action, message, socket)
+          async (message: unknown) => await this.executeAction(action, socket, message)
         )
       })
     }
@@ -45,12 +50,11 @@ export class Socketwise {
 
   private async executeAction(
     action: ActionMetadata,
-    message: unknown,
-    socket: Socket
+    socket: Socket,
+    message?: unknown
   ): Promise<void> {
     const portalInstance = Container.resolve(action.target as Type)
     const actionParams = this.getActionParams(action, message, socket)
-
     await action.value.bind(portalInstance)(...actionParams)
   }
 
