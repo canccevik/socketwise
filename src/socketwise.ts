@@ -4,27 +4,29 @@ import { ActionStorage, ParamStorage } from './storages'
 import { SocketEvent } from './enums'
 import { Container } from 'magnodi'
 import { ActionMetadata, ParamType } from './metadata'
+import { getClassesBySuffix } from './utils'
 
 export interface SocketwiseOptions {
   io?: Server
   port?: number
-  portals: Type[]
+  portals: Type[] | string
 }
 
 export class Socketwise {
   public io: Server
-  private portals: Type[]
 
   constructor(private readonly options: SocketwiseOptions) {
     this.io = options.io || new Server(options.port)
-    this.portals = this.options.portals
 
     this.registerPortals()
   }
 
-  private registerPortals(): void {
+  private async registerPortals(): Promise<void> {
+    if (typeof this.options.portals === 'string') {
+      this.options.portals = await getClassesBySuffix(this.options.portals)
+    }
     this.io.on(SocketEvent.CONNECT, (socket: Socket) => {
-      this.portals.forEach((portal) => {
+      ;(this.options.portals as Type[]).forEach((portal) => {
         this.registerPortal(portal, socket)
       })
     })
