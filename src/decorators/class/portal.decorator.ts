@@ -1,4 +1,4 @@
-import { PortalStorage } from '../storages'
+import { TypeMetadataStorage } from '../../storages'
 
 export interface PortalOptions {
   namespace: string
@@ -6,7 +6,7 @@ export interface PortalOptions {
 
 export function Portal(options: PortalOptions): ClassDecorator {
   return (target: object): void => {
-    PortalStorage.addPortalMetadata({
+    TypeMetadataStorage.addPortalMetadata({
       target,
       options
     })
