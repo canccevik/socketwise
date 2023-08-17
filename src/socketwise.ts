@@ -34,6 +34,10 @@ export class Socketwise {
     const connectedAction = ActionStorage.getSingleActionMetadata(portal, SocketEvent.CONNECT)
     const disconnectedAction = ActionStorage.getSingleActionMetadata(portal, SocketEvent.DISCONNECT)
     const messageActions = ActionStorage.getActionsMetadata(portal, SocketEvent.MESSAGE)
+    const disconnectingAction = ActionStorage.getSingleActionMetadata(
+      portal,
+      SocketEvent.DISCONNECTING
+    )
 
     if (connectedAction) {
       await this.executeAction(connectedAction, socket)
@@ -43,6 +47,13 @@ export class Socketwise {
       socket.on(
         SocketEvent.DISCONNECT,
         async () => await this.executeAction(disconnectedAction, socket)
+      )
+    }
+
+    if (disconnectingAction) {
+      socket.on(
+        SocketEvent.DISCONNECTING,
+        async () => await this.executeAction(disconnectingAction, socket)
       )
     }
 
