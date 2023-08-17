@@ -1,6 +1,6 @@
 import { PortalMetadata } from '../metadata'
 
-class PortalStorageHost {
+class TypeMetadataStorageHost {
   private portals = new Array<PortalMetadata>()
 
   public addPortalMetadata(metadata: PortalMetadata): void {
@@ -12,4 +12,4 @@ class PortalStorageHost {
   }
 }
 
-export const PortalStorage = new PortalStorageHost()
+export const TypeMetadataStorage = new TypeMetadataStorageHost()

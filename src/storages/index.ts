@@ -1,1 +1,1 @@
-export * from './portal.storage'
+export * from './type-metadata.storage'
