@@ -5,7 +5,7 @@ export interface PortalOptions {
 }
 
 export function Portal(options: PortalOptions): ClassDecorator {
-  return (target: object): void => {
+  return (target: Object): void => {
     TypeMetadataStorage.addPortalMetadata({
       target,
       options
