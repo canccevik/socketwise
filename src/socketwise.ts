@@ -56,14 +56,10 @@ export class Socketwise {
 
   private getActionParams(action: ActionMetadata, message: unknown, socket: Socket): any {
     const paramsMetadata = ParamStorage.getParamsMetadata(action.target as Type, action.value)
-
-    return paramsMetadata?.map((param) => {
-      switch (param.paramType) {
-        case ParamType.MESSAGE:
-          return message
-        case ParamType.CONNECTED_SOCKET:
-          return socket
-      }
-    })
+    const paramResponseMap: Record<ParamType, unknown> = {
+      [ParamType.MESSAGE]: message,
+      [ParamType.CONNECTED_SOCKET]: socket
+    }
+    return paramsMetadata?.map((param) => paramResponseMap[param.paramType])
   }
 }
