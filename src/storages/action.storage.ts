@@ -1,7 +1,7 @@
 import { Type } from '../interfaces'
 import { ActionMetadata } from '../metadata'
 
-export class ActionStorageHost {
+class ActionStorageHost {
   private actions = new Array<ActionMetadata>()
 
   public addActionMetadata(metadata: ActionMetadata): void {
