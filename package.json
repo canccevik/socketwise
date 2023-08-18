@@ -5,7 +5,7 @@
   "author": "Can Çevik <mazlumcancevik@gmail.com>",
   "license": "MIT",
   "keywords": [],
-  "main": "dist/src/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "release": "release-it",
     "version": "auto-changelog -p && git add CHANGELOG.md",
