@@ -1,8 +1,8 @@
-import { SocketEvent } from '../enums'
+import { EmitType, SocketEvent } from '../enums'
 
 export interface ActionMetadata {
   target: Object
   value: Function
-  type: SocketEvent
+  type: SocketEvent | EmitType
   options?: any
 }

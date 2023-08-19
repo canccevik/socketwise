@@ -1,7 +1,7 @@
 import { Server, Socket } from 'socket.io'
 import { SocketwiseMiddleware, Type } from './interfaces'
 import { ActionStorage, MiddlewareStorage, ParamStorage, PortalStorage } from './storages'
-import { SocketEvent } from './enums'
+import { EmitType, SocketEvent } from './enums'
 import { Container } from 'magnodi'
 import { ActionMetadata, ParamMetadata, ParamType } from './metadata'
 import { getClassesBySuffix } from './utils'
@@ -114,7 +114,19 @@ export class Socketwise {
   ): Promise<void> {
     const portalInstance = Container.resolve(action.target as Type)
     const actionParams = this.getActionParams(action, socket, message, ack)
-    await action.value.bind(portalInstance)(...actionParams)
+
+    try {
+      const result = await action.value.bind(portalInstance)(...actionParams)
+      result && this.handleSuccessfulResult(action, socket, result)
+    } catch (error) {}
+  }
+
+  private handleSuccessfulResult(action: ActionMetadata, socket: Socket, result: unknown): void {
+    const successAction = ActionStorage.getSingleActionMetadata(
+      action.target as Type,
+      EmitType.SUCCESS
+    )
+    socket.emit(successAction?.options.name, result)
   }
 
   private getActionParams(
