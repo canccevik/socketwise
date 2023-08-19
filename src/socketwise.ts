@@ -42,9 +42,9 @@ export class Socketwise {
       if (!namespace) {
         return this.io.use(middlewareInstance.use.bind(middlewareInstance))
       }
-      this.io
-        .of(namespace instanceof RegExp ? namespace : pathToRegexp(namespace))
-        .use(middlewareInstance.use.bind(middlewareInstance))
+      this.io.on('new_namespace', (namespace) => {
+        namespace.use(middlewareInstance.use.bind(middlewareInstance))
+      })
     })
   }
 
@@ -149,14 +149,20 @@ export class Socketwise {
         [ParamType.MESSAGE_ACK]: ack,
         [ParamType.SOCKET_QUERY_PARAM]: socket.handshake.query[param.options?.name as string],
         [ParamType.NAMESPACE_PARAMS]: namespaceParams,
-        [ParamType.NAMESPACE_PARAM]: namespaceParams[param.options?.name as string]
+        [ParamType.NAMESPACE_PARAM]:
+          namespaceParams && namespaceParams[param.options?.name as string]
       }
       return paramResponseMap[param.paramType]
     })
   }
 
-  private extractNamespaceParams(action: ActionMetadata, socket: Socket): Record<string, string> {
+  private extractNamespaceParams(
+    action: ActionMetadata,
+    socket: Socket
+  ): Record<string, string> | undefined {
     const portalMetadata = PortalStorage.getPortalMetadataByTarget(action.target as Type)
+
+    if (!portalMetadata?.namespace) return
 
     const matcher = match(portalMetadata?.namespace as Path)
     const matchResult = matcher(socket.nsp.name)
