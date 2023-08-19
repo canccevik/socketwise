@@ -124,7 +124,9 @@ export class Socketwise {
     try {
       const result = await action.value.bind(portalInstance)(...actionParams)
       result && this.handleSuccessfulResult(action, socket, result)
-    } catch (error) {}
+    } catch (error) {
+      this.handleFailResult(action, socket, error)
+    }
   }
 
   private handleSuccessfulResult(action: ActionMetadata, socket: Socket, result: unknown): void {
@@ -133,6 +135,15 @@ export class Socketwise {
       EmitType.SUCCESS
     )
     socket.emit(successAction?.options.name, result)
+  }
+
+  private handleFailResult(action: ActionMetadata, socket: Socket, error: any): void {
+    const failActions = ActionStorage.getActionsMetadata(action.target as Type, EmitType.FAIL)
+    const errorData = error instanceof Error ? error.message : error
+
+    failActions?.forEach((failAction) => {
+      socket.emit(failAction.options.name, failAction.options.data || errorData)
+    })
   }
 
   private getActionParams(
