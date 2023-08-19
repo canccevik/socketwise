@@ -1,6 +1,6 @@
 import { Server, Socket } from 'socket.io'
-import { Type } from './interfaces'
-import { ActionStorage, ParamStorage, PortalStorage } from './storages'
+import { SocketwiseMiddleware, Type } from './interfaces'
+import { ActionStorage, MiddlewareStorage, ParamStorage, PortalStorage } from './storages'
 import { SocketEvent } from './enums'
 import { Container } from 'magnodi'
 import { ActionMetadata, ParamMetadata, ParamType } from './metadata'
@@ -12,6 +12,7 @@ export interface SocketwiseOptions {
   io?: Server
   port?: number
   portals: Type[] | string
+  middlewares?: Type[] | string
   useClassTransformer?: boolean
 }
 
@@ -22,7 +23,29 @@ export class Socketwise {
     this.io = options.io || new Server(options.port)
     this.options.useClassTransformer ??= true
 
+    this.registerMiddlewares()
     this.registerPortals()
+  }
+
+  private async registerMiddlewares(): Promise<void> {
+    if (typeof this.options.middlewares === 'string') {
+      this.options.middlewares = await getClassesBySuffix(this.options.middlewares)
+    }
+
+    this.options.middlewares?.forEach((middleware) => {
+      const middlewareMetadata = MiddlewareStorage.getMiddlewareMetadataByTarget(middleware)
+      const middlewareInstance = Container.resolve<SocketwiseMiddleware>(middleware)
+      const namespace = middlewareMetadata?.namespace
+
+      if (!middlewareMetadata) return
+
+      if (!namespace) {
+        return this.io.use(middlewareInstance.use.bind(middlewareInstance))
+      }
+      this.io
+        .of(namespace instanceof RegExp ? namespace : pathToRegexp(namespace))
+        .use(middlewareInstance.use.bind(middlewareInstance))
+    })
   }
 
   private async registerPortals(): Promise<void> {
