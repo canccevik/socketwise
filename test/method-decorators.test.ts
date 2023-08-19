@@ -1,9 +1,6 @@
 import { Socketwise } from '../src'
 import { UserPortal } from './portals'
 import { io, Socket } from 'socket.io-client'
-import dotenv from 'dotenv'
-
-dotenv.config()
 
 describe('Method Decorators', () => {
   let app: Socketwise
@@ -12,9 +9,9 @@ describe('Method Decorators', () => {
   beforeAll(() => {
     app = new Socketwise({
       portals: [UserPortal],
-      port: Number(process.env.PORT)
+      port: Number(3000)
     })
-    client = io(`ws://localhost:${process.env.PORT}/users/12`)
+    client = io('ws://localhost:3000/users/12')
   })
 
   afterAll(() => {
