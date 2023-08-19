@@ -5,13 +5,15 @@ import { io, Socket } from 'socket.io-client'
 describe('Method Decorators', () => {
   let app: Socketwise
   let client: Socket
+  let port: number
 
   beforeAll(() => {
+    port = 3000
     app = new Socketwise({
       portals: [UserPortal],
-      port: Number(3000)
+      port
     })
-    client = io('ws://localhost:3000/users/12')
+    client = io(`ws://localhost:${port}/users/12`)
   })
 
   afterAll(() => {
@@ -24,6 +26,15 @@ describe('Method Decorators', () => {
       client.on('connected', () => {
         done()
       })
+    })
+  })
+
+  describe('SubscribeMessage Decorator', () => {
+    it('should SubscribeMessage decorator work', (done) => {
+      client.on('user_message', () => {
+        done()
+      })
+      client.emit('new_user')
     })
   })
 })
