@@ -1,10 +1,11 @@
 import { Server, Socket } from 'socket.io'
 import { Type } from './interfaces'
-import { ActionStorage, ParamStorage } from './storages'
+import { ActionStorage, ParamStorage, PortalStorage } from './storages'
 import { SocketEvent } from './enums'
 import { Container } from 'magnodi'
 import { ActionMetadata, ParamType } from './metadata'
 import { getClassesBySuffix } from './utils'
+import { pathToRegexp } from 'path-to-regexp'
 
 export interface SocketwiseOptions {
   io?: Server
@@ -25,10 +26,19 @@ export class Socketwise {
     if (typeof this.options.portals === 'string') {
       this.options.portals = await getClassesBySuffix(this.options.portals)
     }
-    this.io.on(SocketEvent.CONNECT, (socket: Socket) => {
-      ;(this.options.portals as Type[]).forEach((portal) => {
-        this.registerPortal(portal, socket)
-      })
+
+    this.options.portals.forEach((portal) => {
+      const portalMetadata = PortalStorage.getPortalMetadataByTarget(portal)
+      const namespace = portalMetadata?.namespace
+
+      if (!portalMetadata) return
+
+      if (!namespace) {
+        return this.io.on(SocketEvent.CONNECT, (socket) => this.registerPortal(portal, socket))
+      }
+      this.io
+        .of(namespace instanceof RegExp ? namespace : pathToRegexp(namespace))
+        .on(SocketEvent.CONNECT, (socket) => this.registerPortal(portal, socket))
     })
   }
 
@@ -86,7 +96,7 @@ export class Socketwise {
     socket: Socket,
     message?: unknown,
     ack?: Function
-  ): any {
+  ): unknown[] {
     const paramResponseMap: Record<ParamType, unknown> = {
       [ParamType.MESSAGE]: message,
       [ParamType.SOCKET_IO]: this.io,
