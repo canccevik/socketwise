@@ -5,7 +5,7 @@ import { SocketEvent } from './enums'
 import { Container } from 'magnodi'
 import { ActionMetadata, ParamType } from './metadata'
 import { getClassesBySuffix } from './utils'
-import { pathToRegexp } from 'path-to-regexp'
+import { pathToRegexp, match, Path } from 'path-to-regexp'
 
 export interface SocketwiseOptions {
   io?: Server
@@ -97,7 +97,11 @@ export class Socketwise {
     message?: unknown,
     ack?: Function
   ): unknown[] {
-    return ParamStorage.getParamsMetadata(action.target as Type, action.value)?.map((param) => {
+    const portalMetadata = PortalStorage.getPortalMetadataByTarget(action.target as Type)
+    const paramsMetadata = ParamStorage.getParamsMetadata(action.target as Type, action.value)
+
+    return paramsMetadata.map((param) => {
+      const namespaceParams = match(portalMetadata?.namespace as Path)(socket.nsp.name) || undefined
       const paramResponseMap: Record<ParamType, unknown> = {
         [ParamType.MESSAGE]: message,
         [ParamType.SOCKET_IO]: this.io,
@@ -106,7 +110,8 @@ export class Socketwise {
         [ParamType.SOCKET_REQUEST]: socket.request,
         [ParamType.SOCKET_ROOMS]: socket.rooms,
         [ParamType.MESSAGE_ACK]: ack,
-        [ParamType.SOCKET_QUERY_PARAM]: socket.handshake.query[param.options?.name as string]
+        [ParamType.SOCKET_QUERY_PARAM]: socket.handshake.query[param.options?.name as string],
+        [ParamType.NAMESPACE_PARAMS]: namespaceParams?.params
       }
       return paramResponseMap[param.paramType]
     })

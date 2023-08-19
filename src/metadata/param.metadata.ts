@@ -6,7 +6,8 @@ export enum ParamType {
   SOCKET_REQUEST,
   SOCKET_ROOMS,
   MESSAGE_ACK,
-  SOCKET_QUERY_PARAM
+  SOCKET_QUERY_PARAM,
+  NAMESPACE_PARAMS
 }
 
 export interface ParamMetadata {
