@@ -1,3 +1,5 @@
+import { Type } from '../interfaces'
+
 export enum ParamType {
   MESSAGE,
   SOCKET_IO,
@@ -17,4 +19,5 @@ export interface ParamMetadata {
   index: number
   paramType: ParamType
   options?: Record<string, unknown>
+  type: Type
 }

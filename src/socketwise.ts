@@ -3,21 +3,24 @@ import { Type } from './interfaces'
 import { ActionStorage, ParamStorage, PortalStorage } from './storages'
 import { SocketEvent } from './enums'
 import { Container } from 'magnodi'
-import { ActionMetadata, ParamType } from './metadata'
+import { ActionMetadata, ParamMetadata, ParamType } from './metadata'
 import { getClassesBySuffix } from './utils'
 import { pathToRegexp, match, Path } from 'path-to-regexp'
+import { plainToInstance } from 'class-transformer'
 
 export interface SocketwiseOptions {
   io?: Server
   port?: number
   portals: Type[] | string
+  useClassTransformer?: boolean
 }
 
 export class Socketwise {
   public io: Server
 
-  constructor(private readonly options: SocketwiseOptions) {
+  constructor(private options: SocketwiseOptions) {
     this.io = options.io || new Server(options.port)
+    this.options.useClassTransformer ??= true
 
     this.registerPortals()
   }
@@ -102,7 +105,7 @@ export class Socketwise {
 
     return paramsMetadata.map((param) => {
       const paramResponseMap: Record<ParamType, unknown> = {
-        [ParamType.MESSAGE]: message,
+        [ParamType.MESSAGE]: this.transformMessage(message, param),
         [ParamType.SOCKET_IO]: this.io,
         [ParamType.CONNECTED_SOCKET]: socket,
         [ParamType.SOCKET_ID]: socket.id,
@@ -124,5 +127,12 @@ export class Socketwise {
     const matchResult = matcher(socket.nsp.name)
 
     return JSON.parse(JSON.stringify(matchResult)).params
+  }
+
+  private transformMessage(message: unknown, param: ParamMetadata): unknown {
+    if (param.paramType !== ParamType.MESSAGE || !this.options.useClassTransformer) {
+      return message
+    }
+    return plainToInstance(param.type, message)
   }
 }
