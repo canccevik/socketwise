@@ -97,17 +97,18 @@ export class Socketwise {
     message?: unknown,
     ack?: Function
   ): unknown[] {
-    const paramResponseMap: Record<ParamType, unknown> = {
-      [ParamType.MESSAGE]: message,
-      [ParamType.SOCKET_IO]: this.io,
-      [ParamType.CONNECTED_SOCKET]: socket,
-      [ParamType.SOCKET_ID]: socket.id,
-      [ParamType.SOCKET_REQUEST]: socket.request,
-      [ParamType.SOCKET_ROOMS]: socket.rooms,
-      [ParamType.MESSAGE_ACK]: ack
-    }
-    return ParamStorage.getParamsMetadata(action.target as Type, action.value)?.map(
-      (param) => paramResponseMap[param.paramType]
-    )
+    return ParamStorage.getParamsMetadata(action.target as Type, action.value)?.map((param) => {
+      const paramResponseMap: Record<ParamType, unknown> = {
+        [ParamType.MESSAGE]: message,
+        [ParamType.SOCKET_IO]: this.io,
+        [ParamType.CONNECTED_SOCKET]: socket,
+        [ParamType.SOCKET_ID]: socket.id,
+        [ParamType.SOCKET_REQUEST]: socket.request,
+        [ParamType.SOCKET_ROOMS]: socket.rooms,
+        [ParamType.MESSAGE_ACK]: ack,
+        [ParamType.SOCKET_QUERY_PARAM]: socket.handshake.query[param.options?.name as string]
+      }
+      return paramResponseMap[param.paramType]
+    })
   }
 }

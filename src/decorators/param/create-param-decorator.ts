@@ -1,7 +1,10 @@
 import { ParamType } from '../../metadata'
 import { ParamStorage } from '../../storages'
 
-export function createParamDecorator(paramType: ParamType): Function {
+export function createParamDecorator(
+  paramType: ParamType,
+  options?: Record<string, unknown>
+): Function {
   return (target: Object, propertyKey: string | symbol, parameterIndex: number): void => {
     const targetMethod = target[propertyKey as keyof typeof target]
 
@@ -9,7 +12,8 @@ export function createParamDecorator(paramType: ParamType): Function {
       target: target.constructor,
       value: targetMethod,
       index: parameterIndex,
-      paramType
+      paramType,
+      options
     })
   }
 }
