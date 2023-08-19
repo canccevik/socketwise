@@ -97,11 +97,10 @@ export class Socketwise {
     message?: unknown,
     ack?: Function
   ): unknown[] {
-    const portalMetadata = PortalStorage.getPortalMetadataByTarget(action.target as Type)
     const paramsMetadata = ParamStorage.getParamsMetadata(action.target as Type, action.value)
+    const namespaceParams = this.extractNamespaceParams(action, socket)
 
     return paramsMetadata.map((param) => {
-      const namespaceParams = match(portalMetadata?.namespace as Path)(socket.nsp.name) || undefined
       const paramResponseMap: Record<ParamType, unknown> = {
         [ParamType.MESSAGE]: message,
         [ParamType.SOCKET_IO]: this.io,
@@ -111,9 +110,19 @@ export class Socketwise {
         [ParamType.SOCKET_ROOMS]: socket.rooms,
         [ParamType.MESSAGE_ACK]: ack,
         [ParamType.SOCKET_QUERY_PARAM]: socket.handshake.query[param.options?.name as string],
-        [ParamType.NAMESPACE_PARAMS]: namespaceParams?.params
+        [ParamType.NAMESPACE_PARAMS]: namespaceParams,
+        [ParamType.NAMESPACE_PARAM]: namespaceParams[param.options?.name as string]
       }
       return paramResponseMap[param.paramType]
     })
+  }
+
+  private extractNamespaceParams(action: ActionMetadata, socket: Socket): Record<string, string> {
+    const portalMetadata = PortalStorage.getPortalMetadataByTarget(action.target as Type)
+
+    const matcher = match(portalMetadata?.namespace as Path)
+    const matchResult = matcher(socket.nsp.name)
+
+    return JSON.parse(JSON.stringify(matchResult)).params
   }
 }
