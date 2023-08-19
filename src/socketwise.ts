@@ -75,10 +75,16 @@ export class Socketwise {
   }
 
   private async registerPortal(portal: Type, socket: Socket): Promise<void> {
-    const connectedAction = ActionStorage.getSingleActionMetadata(portal, SocketEvent.CONNECT)
-    const disconnectedAction = ActionStorage.getSingleActionMetadata(portal, SocketEvent.DISCONNECT)
-    const messageActions = ActionStorage.getActionsMetadata(portal, SocketEvent.MESSAGE)
-    const disconnectingAction = ActionStorage.getSingleActionMetadata(
+    const messageActions = ActionStorage.getActionsMetadataByTarget(portal, SocketEvent.MESSAGE)
+    const connectedAction = ActionStorage.getSingleActionMetadataByTarget(
+      portal,
+      SocketEvent.CONNECT
+    )
+    const disconnectedAction = ActionStorage.getSingleActionMetadataByTarget(
+      portal,
+      SocketEvent.DISCONNECT
+    )
+    const disconnectingAction = ActionStorage.getSingleActionMetadataByTarget(
       portal,
       SocketEvent.DISCONNECTING
     )
@@ -132,14 +138,19 @@ export class Socketwise {
   private handleSuccessfulResult(action: ActionMetadata, socket: Socket, result: unknown): void {
     const successAction = ActionStorage.getSingleActionMetadata(
       action.target as Type,
+      action.value,
       EmitType.SUCCESS
     )
     socket.emit(successAction?.options.name, result)
   }
 
   private handleFailResult(action: ActionMetadata, socket: Socket, error: any): void {
-    const failActions = ActionStorage.getActionsMetadata(action.target as Type, EmitType.FAIL)
     const errorData = error instanceof Error ? error.message : error
+    const failActions = ActionStorage.getActionsMetadata(
+      action.target as Type,
+      action.value,
+      EmitType.FAIL
+    )
 
     failActions?.forEach((failAction) => {
       socket.emit(failAction.options.name, failAction.options.data || errorData)

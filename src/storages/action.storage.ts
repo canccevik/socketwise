@@ -11,12 +11,32 @@ class ActionStorageHost {
 
   public getSingleActionMetadata(
     target: Type,
+    value: Function,
+    type: SocketEvent | EmitType
+  ): ActionMetadata | undefined {
+    return this.actions.find(
+      (action) => action.target === target && action.value === value && action.type === type
+    )
+  }
+
+  public getSingleActionMetadataByTarget(
+    target: Type,
     type: SocketEvent | EmitType
   ): ActionMetadata | undefined {
     return this.actions.find((action) => action.target === target && action.type === type)
   }
 
   public getActionsMetadata(
+    target: Type,
+    value: Function,
+    type: SocketEvent | EmitType
+  ): ActionMetadata[] | undefined {
+    return this.actions.filter(
+      (action) => action.target === target && action.value === value && action.type === type
+    )
+  }
+
+  public getActionsMetadataByTarget(
     target: Type,
     type: SocketEvent | EmitType
   ): ActionMetadata[] | undefined {
