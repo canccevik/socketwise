@@ -42,8 +42,14 @@ export class Socketwise {
       if (!namespace) {
         return this.io.use(middlewareInstance.use.bind(middlewareInstance))
       }
-      this.io.on('new_namespace', (namespace) => {
-        namespace.use(middlewareInstance.use.bind(middlewareInstance))
+      this.io.on(SocketEvent.NEW_NAMESPACE, (nsp) => {
+        const namespaces = Array.isArray(namespace) ? namespace : [namespace]
+
+        const shouldApply = namespaces.some((namespace) => {
+          const namespaceRegexp = namespace instanceof RegExp ? namespace : pathToRegexp(namespace)
+          return namespaceRegexp.test(nsp.name)
+        })
+        shouldApply && nsp.use(middlewareInstance.use.bind(middlewareInstance))
       })
     })
   }
