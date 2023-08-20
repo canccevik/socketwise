@@ -1,5 +1,13 @@
 import { Socket } from 'socket.io'
-import { ConnectedSocket, Message, Portal, SocketIO, SocketId, SubscribeMessage } from '../../src'
+import {
+  ConnectedSocket,
+  Message,
+  MessageAck,
+  Portal,
+  SocketIO,
+  SocketId,
+  SubscribeMessage
+} from '../../src'
 import { Server } from 'socket.io'
 
 @Portal('/params')
@@ -22,5 +30,10 @@ export class ParamPortal {
   @SubscribeMessage('message_decorator')
   public message(@Message() message: unknown, @ConnectedSocket() socket: Socket): void {
     socket.emit('message_decorator_response', message)
+  }
+
+  @SubscribeMessage('message_ack')
+  public messageAck(@Message() message: unknown, @MessageAck() ack: Function): void {
+    ack(message)
   }
 }

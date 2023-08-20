@@ -57,4 +57,13 @@ describe('Param Decorators', () => {
       client.emit('message_decorator', 'test message')
     })
   })
+
+  describe('MessageAck Decorator', () => {
+    it('should MessageAck decorator work', (done) => {
+      client.emit('message_ack', 'test message', (data: unknown) => {
+        expect(data).toEqual('test message')
+        done()
+      })
+    })
+  })
 })
