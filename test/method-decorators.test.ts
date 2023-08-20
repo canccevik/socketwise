@@ -37,4 +37,14 @@ describe('Method Decorators', () => {
       client.emit('new_user')
     })
   })
+
+  describe('EmitOnSuccess Decorator', () => {
+    it('should EmitOnSuccess decorator work', (done) => {
+      client.on('sucess_emitted', (data) => {
+        expect(data).toEqual('success')
+        done()
+      })
+      client.emit('emit_success')
+    })
+  })
 })
