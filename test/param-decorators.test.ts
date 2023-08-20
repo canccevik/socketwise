@@ -18,6 +18,16 @@ describe('Param Decorators', () => {
     client.close()
   })
 
+  describe('ConnectedSocket Decorator', () => {
+    it('should ConnectedSocket decorator work', (done) => {
+      client.on('connected_socket_response', (data) => {
+        expect(data).toEqual(client.id)
+        done()
+      })
+      client.emit('connected_socket')
+    })
+  })
+
   describe('SocketId Decorator', () => {
     it('should SocketId decorator work', (done) => {
       client.on('socket_id_response', (data) => {
