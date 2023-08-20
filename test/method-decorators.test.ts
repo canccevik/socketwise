@@ -1,5 +1,5 @@
 import { Socketwise } from '../src'
-import { UserPortal } from './portals'
+import { MethodPortal } from './portals'
 import { io, Socket } from 'socket.io-client'
 
 describe('Method Decorators', () => {
@@ -9,8 +9,8 @@ describe('Method Decorators', () => {
 
   beforeAll(() => {
     port = 3000
-    app = new Socketwise({ portals: [UserPortal], port })
-    client = io(`ws://localhost:${port}/users/12`)
+    app = new Socketwise({ portals: [MethodPortal], port })
+    client = io(`ws://localhost:${port}/methods`)
   })
 
   afterAll(() => {
@@ -28,10 +28,10 @@ describe('Method Decorators', () => {
 
   describe('SubscribeMessage Decorator', () => {
     it('should SubscribeMessage decorator work', (done) => {
-      client.on('user_message', () => {
+      client.on('method_message', () => {
         done()
       })
-      client.emit('new_user')
+      client.emit('new_method')
     })
   })
 

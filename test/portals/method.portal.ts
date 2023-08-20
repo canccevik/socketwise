@@ -8,16 +8,16 @@ import {
   SubscribeMessage
 } from '../../src'
 
-@Portal('/users/:id')
-export class UserPortal {
+@Portal('/methods')
+export class MethodPortal {
   @OnConnect()
   public onConnect(@ConnectedSocket() socket: Socket): void {
     socket.emit('connected')
   }
 
-  @SubscribeMessage('new_user')
+  @SubscribeMessage('new_method')
   public onMessage(@ConnectedSocket() socket: Socket): void {
-    socket.emit('user_message')
+    socket.emit('method_message')
   }
 
   @SubscribeMessage('emit_success')

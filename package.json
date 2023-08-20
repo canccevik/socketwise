@@ -12,7 +12,7 @@
     "preinstall": "npx only-allow pnpm",
     "build": "tsc",
     "build:dev": "tsc --watch",
-    "test": "jest --forceExit --detectOpenHandles",
+    "test": "jest --forceExit --detectOpenHandles --verbose",
     "lint": "eslint --ext .js,.ts .",
     "lint:fix": "eslint --fix --ext .js,.ts .",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
