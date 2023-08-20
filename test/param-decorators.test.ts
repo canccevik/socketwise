@@ -127,12 +127,25 @@ describe('Param Decorators', () => {
     it('should NamespaceParams decorator work', (done) => {
       // ARRANGE & ASSERT
       client.on('namespace_params_response', (data) => {
-        expect(data).toEqual({ id: idParam })
+        expect(data).toEqual({ id: idParam.toString() })
         done()
       })
 
       // ACT
       client.emit('namespace_params')
+    })
+  })
+
+  describe('NamespaceParam Decorator', () => {
+    it('should NamespaceParam decorator work', (done) => {
+      // ARRANGE & ASSERT
+      client.on('namespace_param_response', (data) => {
+        expect(data).toEqual(idParam.toString())
+        done()
+      })
+
+      // ACT
+      client.emit('namespace_param')
     })
   })
 })

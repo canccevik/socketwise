@@ -4,6 +4,7 @@ import {
   ConnectedSocket,
   Message,
   MessageAck,
+  NamespaceParam,
   NamespaceParams,
   Portal,
   SocketIO,
@@ -68,5 +69,10 @@ export class ParamPortal {
     @NamespaceParams() params: Record<string, string>
   ): void {
     socket.emit('namespace_params_response', params)
+  }
+
+  @SubscribeMessage('namespace_param')
+  public namespaceParam(@ConnectedSocket() socket: Socket, @NamespaceParam('id') id: string): void {
+    socket.emit('namespace_param_response', id)
   }
 }
