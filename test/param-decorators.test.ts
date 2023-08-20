@@ -27,4 +27,14 @@ describe('Param Decorators', () => {
       client.emit('socket_id')
     })
   })
+
+  describe('SocketIO Decorator', () => {
+    it('should SocketIO decorator work', (done) => {
+      client.on('socket_io_response', (data) => {
+        expect(data).toEqual(true)
+        done()
+      })
+      client.emit('socket_io')
+    })
+  })
 })
