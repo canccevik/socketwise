@@ -6,11 +6,15 @@ describe('Param Decorators', () => {
   let app: Socketwise
   let client: Socket
   let port: number
+  let idParam: number
 
   beforeAll(() => {
     port = 3000
+    idParam = 12
     app = new Socketwise({ portals: [ParamPortal], port })
-    client = io(`ws://localhost:${port}/params`, { query: { packageName: 'socketwise' } })
+    client = io(`ws://localhost:${port}/params/${idParam}`, {
+      query: { packageName: 'socketwise' }
+    })
   })
 
   afterAll(() => {
@@ -109,13 +113,26 @@ describe('Param Decorators', () => {
   describe('SocketRooms Decorator', () => {
     it('should SocketRooms decorator work', (done) => {
       // ARRANGE & ASSERT
-      client.on('socket_rooms_response', (data: Set<Object>) => {
+      client.on('socket_rooms_response', (data) => {
         expect(data).toEqual(true)
         done()
       })
 
       // ACT
       client.emit('socket_rooms')
+    })
+  })
+
+  describe('NamespaceParams Decorator', () => {
+    it('should NamespaceParams decorator work', (done) => {
+      // ARRANGE & ASSERT
+      client.on('namespace_params_response', (data) => {
+        expect(data).toEqual({ id: idParam })
+        done()
+      })
+
+      // ACT
+      client.emit('namespace_params')
     })
   })
 })

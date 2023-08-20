@@ -4,6 +4,7 @@ import {
   ConnectedSocket,
   Message,
   MessageAck,
+  NamespaceParams,
   Portal,
   SocketIO,
   SocketId,
@@ -13,7 +14,7 @@ import {
   SubscribeMessage
 } from '../../src'
 
-@Portal('/params')
+@Portal('/params/:id')
 export class ParamPortal {
   @SubscribeMessage('connected_socket')
   public connectedSocket(@ConnectedSocket() socket: Socket): void {
@@ -59,5 +60,13 @@ export class ParamPortal {
   @SubscribeMessage('socket_rooms')
   public socketRooms(@ConnectedSocket() socket: Socket, @SocketRooms() rooms: Set<Object>): void {
     socket.emit('socket_rooms_response', rooms.has(socket.id))
+  }
+
+  @SubscribeMessage('namespace_params')
+  public namespaceParams(
+    @ConnectedSocket() socket: Socket,
+    @NamespaceParams() params: Record<string, string>
+  ): void {
+    socket.emit('namespace_params_response', params)
   }
 }
