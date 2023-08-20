@@ -9,6 +9,7 @@ import {
   SocketId,
   SocketQueryParam,
   SocketRequest,
+  SocketRooms,
   SubscribeMessage
 } from '../../src'
 
@@ -53,5 +54,10 @@ export class ParamPortal {
     @SocketRequest() request: IncomingMessage
   ): void {
     socket.emit('socket_request_response', request instanceof IncomingMessage)
+  }
+
+  @SubscribeMessage('socket_rooms')
+  public socketRooms(@ConnectedSocket() socket: Socket, @SocketRooms() rooms: Set<Object>): void {
+    socket.emit('socket_rooms_response', rooms.has(socket.id))
   }
 }

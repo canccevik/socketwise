@@ -105,4 +105,17 @@ describe('Param Decorators', () => {
       client.emit('socket_request')
     })
   })
+
+  describe('SocketRooms Decorator', () => {
+    it('should SocketRooms decorator work', (done) => {
+      // ARRANGE & ASSERT
+      client.on('socket_rooms_response', (data: Set<Object>) => {
+        expect(data).toEqual(true)
+        done()
+      })
+
+      // ACT
+      client.emit('socket_rooms')
+    })
+  })
 })
