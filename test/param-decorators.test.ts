@@ -20,46 +20,59 @@ describe('Param Decorators', () => {
 
   describe('ConnectedSocket Decorator', () => {
     it('should ConnectedSocket decorator work', (done) => {
+      // ARRANGE & ASSERT
       client.on('connected_socket_response', (data) => {
         expect(data).toEqual(client.id)
         done()
       })
+
+      // ACT
       client.emit('connected_socket')
     })
   })
 
   describe('SocketId Decorator', () => {
     it('should SocketId decorator work', (done) => {
+      // ARRANGE & ASSERT
       client.on('socket_id_response', (data) => {
         expect(data).toEqual(client.id)
         done()
       })
+
+      // ACT
       client.emit('socket_id')
     })
   })
 
   describe('SocketIO Decorator', () => {
     it('should SocketIO decorator work', (done) => {
+      // ARRANGE & ASSERT
       client.on('socket_io_response', (data) => {
         expect(data).toEqual(true)
         done()
       })
+
+      // ACT
       client.emit('socket_io')
     })
   })
 
   describe('Message Decorator', () => {
     it('should Message decorator work', (done) => {
+      // ARRANGE & ASSERT
       client.on('message_decorator_response', (data) => {
         expect(data).toEqual('test message')
         done()
       })
+
+      // ACT
       client.emit('message_decorator', 'test message')
     })
   })
 
   describe('MessageAck Decorator', () => {
     it('should MessageAck decorator work', (done) => {
+      // ARRANGE & ACT & ASSERT
       client.emit('message_ack', 'test message', (data: unknown) => {
         expect(data).toEqual('test message')
         done()
@@ -69,10 +82,13 @@ describe('Param Decorators', () => {
 
   describe('SocketQueryParam Decorator', () => {
     it('should SocketQueryParam decorator work', (done) => {
+      // ARRANGE & ASSERT
       client.on('socket_query_param_response', (data) => {
         expect(data).toEqual('socketwise')
         done()
       })
+
+      // ACT
       client.emit('socket_query_param')
     })
   })
