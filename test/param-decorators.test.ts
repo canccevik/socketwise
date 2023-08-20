@@ -92,4 +92,17 @@ describe('Param Decorators', () => {
       client.emit('socket_query_param')
     })
   })
+
+  describe('SocketRequest Decorator', () => {
+    it('should SocketRequest decorator work', (done) => {
+      // ARRANGE & ASSERT
+      client.on('socket_request_response', (data) => {
+        expect(data).toEqual(true)
+        done()
+      })
+
+      // ACT
+      client.emit('socket_request')
+    })
+  })
 })

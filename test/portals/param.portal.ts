@@ -1,4 +1,5 @@
 import { Socket, Server } from 'socket.io'
+import { IncomingMessage } from 'http'
 import {
   ConnectedSocket,
   Message,
@@ -7,6 +8,7 @@ import {
   SocketIO,
   SocketId,
   SocketQueryParam,
+  SocketRequest,
   SubscribeMessage
 } from '../../src'
 
@@ -43,5 +45,13 @@ export class ParamPortal {
     @SocketQueryParam('packageName') packageName: string
   ): void {
     socket.emit('socket_query_param_response', packageName)
+  }
+
+  @SubscribeMessage('socket_request')
+  public socketRequest(
+    @ConnectedSocket() socket: Socket,
+    @SocketRequest() request: IncomingMessage
+  ): void {
+    socket.emit('socket_request_response', request instanceof IncomingMessage)
   }
 }
