@@ -9,10 +9,7 @@ describe('Method Decorators', () => {
 
   beforeAll(() => {
     port = 3000
-    app = new Socketwise({
-      portals: [UserPortal],
-      port
-    })
+    app = new Socketwise({ portals: [UserPortal], port })
     client = io(`ws://localhost:${port}/users/12`)
   })
 
@@ -45,6 +42,48 @@ describe('Method Decorators', () => {
         done()
       })
       client.emit('emit_success')
+    })
+  })
+
+  describe('EmitOnFail Decorator', () => {
+    it('should data be equal to throwed error message', (done) => {
+      client.on('fail_emitted', (data) => {
+        expect(data).toEqual('fail')
+        done()
+      })
+      client.emit('emit_fail')
+    })
+
+    it('should emitting custom fail response work', (done) => {
+      client.on('custom_fail_emitted', (data) => {
+        expect(data).toEqual({ error: true })
+        done()
+      })
+      client.emit('emit_custom_fail')
+    })
+
+    it('should emitting multiple fails work (1)', (done) => {
+      client.on('fail_emitted', (data) => {
+        expect(data).toEqual('fail')
+        done()
+      })
+      client.emit('emit_multiple_fail')
+    })
+
+    it('should emitting multiple fails work (2)', (done) => {
+      client.on('fail_emitted_1', (data) => {
+        expect(data).toEqual({ error: true })
+        done()
+      })
+      client.emit('emit_multiple_fail')
+    })
+
+    it('should emitting multiple fails work (3)', (done) => {
+      client.on('fail_emitted_2', (data) => {
+        expect(data).toEqual({ message: 'error' })
+        done()
+      })
+      client.emit('emit_multiple_fail')
     })
   })
 })

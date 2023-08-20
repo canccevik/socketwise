@@ -1,5 +1,12 @@
 import { Socket } from 'socket.io'
-import { ConnectedSocket, EmitOnSuccess, OnConnect, Portal, SubscribeMessage } from '../../src'
+import {
+  ConnectedSocket,
+  EmitOnFail,
+  EmitOnSuccess,
+  OnConnect,
+  Portal,
+  SubscribeMessage
+} from '../../src'
 
 @Portal('/users/:id')
 export class UserPortal {
@@ -17,5 +24,25 @@ export class UserPortal {
   @EmitOnSuccess('sucess_emitted')
   public emitSuccess(): string {
     return 'success'
+  }
+
+  @SubscribeMessage('emit_fail')
+  @EmitOnFail('fail_emitted')
+  public emitFail(): void {
+    throw new Error('fail')
+  }
+
+  @SubscribeMessage('emit_custom_fail')
+  @EmitOnFail('custom_fail_emitted', { error: true })
+  public emitCustomFail(): void {
+    throw new Error('fail')
+  }
+
+  @SubscribeMessage('emit_multiple_fail')
+  @EmitOnFail('fail_emitted')
+  @EmitOnFail('fail_emitted_1', { error: true })
+  @EmitOnFail('fail_emitted_2', { message: 'error' })
+  public emitMultipleFail(): void {
+    throw new Error('fail')
   }
 }
