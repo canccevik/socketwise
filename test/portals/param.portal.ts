@@ -1,4 +1,4 @@
-import { Socket } from 'socket.io'
+import { Socket, Server } from 'socket.io'
 import {
   ConnectedSocket,
   Message,
@@ -6,9 +6,9 @@ import {
   Portal,
   SocketIO,
   SocketId,
+  SocketQueryParam,
   SubscribeMessage
 } from '../../src'
-import { Server } from 'socket.io'
 
 @Portal('/params')
 export class ParamPortal {
@@ -35,5 +35,13 @@ export class ParamPortal {
   @SubscribeMessage('message_ack')
   public messageAck(@Message() message: unknown, @MessageAck() ack: Function): void {
     ack(message)
+  }
+
+  @SubscribeMessage('socket_query_param')
+  public socketQueryParam(
+    @ConnectedSocket() socket: Socket,
+    @SocketQueryParam('packageName') packageName: string
+  ): void {
+    socket.emit('socket_query_param_response', packageName)
   }
 }

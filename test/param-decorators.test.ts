@@ -10,7 +10,7 @@ describe('Param Decorators', () => {
   beforeAll(() => {
     port = 3000
     app = new Socketwise({ portals: [ParamPortal], port })
-    client = io(`ws://localhost:${port}/params`)
+    client = io(`ws://localhost:${port}/params`, { query: { packageName: 'socketwise' } })
   })
 
   afterAll(() => {
@@ -64,6 +64,16 @@ describe('Param Decorators', () => {
         expect(data).toEqual('test message')
         done()
       })
+    })
+  })
+
+  describe('SocketQueryParam Decorator', () => {
+    it('should SocketQueryParam decorator work', (done) => {
+      client.on('socket_query_param_response', (data) => {
+        expect(data).toEqual('socketwise')
+        done()
+      })
+      client.emit('socket_query_param')
     })
   })
 })
