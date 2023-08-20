@@ -47,4 +47,14 @@ describe('Param Decorators', () => {
       client.emit('socket_io')
     })
   })
+
+  describe('Message Decorator', () => {
+    it('should Message decorator work', (done) => {
+      client.on('message_decorator_response', (data) => {
+        expect(data).toEqual('test message')
+        done()
+      })
+      client.emit('message_decorator', 'test message')
+    })
+  })
 })

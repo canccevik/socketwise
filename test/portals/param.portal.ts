@@ -1,5 +1,5 @@
 import { Socket } from 'socket.io'
-import { ConnectedSocket, Portal, SocketIO, SocketId, SubscribeMessage } from '../../src'
+import { ConnectedSocket, Message, Portal, SocketIO, SocketId, SubscribeMessage } from '../../src'
 import { Server } from 'socket.io'
 
 @Portal('/params')
@@ -17,5 +17,10 @@ export class ParamPortal {
   @SubscribeMessage('socket_io')
   public socketIO(@SocketIO() socketIO: Server, @ConnectedSocket() socket: Socket): void {
     socket.emit('socket_io_response', socketIO instanceof Server)
+  }
+
+  @SubscribeMessage('message_decorator')
+  public message(@Message() message: unknown, @ConnectedSocket() socket: Socket): void {
+    socket.emit('message_decorator_response', message)
   }
 }
