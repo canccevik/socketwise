@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://i.imgur.com/c5Xck6R.jpg" alt="Socketwise Logo" width="500" height="250"/>
+<img src="https://raw.githubusercontent.com/canccevik/socketwise/main/.github/assets/logo.jpg" alt="Socketwise Logo" width="500" height="250"/>
 </p>
 
 <p align="center">🔌 A powerful framework for building real-time applications on top of <a href="https://github.com/socketio/socket.io">Socket.IO</a> using class-based approach with decorators.</p>
